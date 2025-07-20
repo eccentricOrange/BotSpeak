@@ -16,8 +16,8 @@ int testRequestFramePacking(DataFrame_TypeDef* sourceFrame, uint8_t* expectedByt
     }
     
 
-    printf("[TESTING BUFFER LENGTH] expected: %d, actual: %d, ", sourceFrame->dataLength + 11, actualBufferLength);
-    if (actualBufferLength != 11) {
+    printf("[TESTING BUFFER LENGTH] expected: %d, actual: %d, ", sourceFrame->dataLength + BOT_SPEAK_MIN_PACKET_SIZE, actualBufferLength);
+    if (actualBufferLength != BOT_SPEAK_MIN_PACKET_SIZE) {
         printf("Failed!\n");
         return -1;
     } else {

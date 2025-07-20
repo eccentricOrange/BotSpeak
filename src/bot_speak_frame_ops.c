@@ -44,7 +44,7 @@ int botSpeak_packFrame(DataFrame_TypeDef* sourceFrame, uint8_t* destinationBuffe
     }
 
     // Calculate the total length
-    *destinationLength = 10 + sourceFrame->dataLength + 1;
+    *destinationLength = BOT_SPEAK_MIN_PACKET_SIZE + sourceFrame->dataLength;
 
     // End byte
     destinationBuffer[(*destinationLength)-1] = END_BYTE;
