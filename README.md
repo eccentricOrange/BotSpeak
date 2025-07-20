@@ -1,3 +1,21 @@
+# Key terms and concepts
+
+## Frame-related part of the program
+To do with conversions of data only.
+
+*   **Serialize:** Convert a meaningful data-type to a byte-array.
+*   **Deserialize:** Convert a byte-array to a meaningful data-type.
+*   **Frame:** A high-level data structure. This contains the data as an ID, a length, a timestamp, and a byte-array. See `DataFrame_TypeDef`.
+*   **Pack frame:** Convert a byte-array into a frame.
+*   **Unpack frame:** Convert a frame into a byte-array.
+
+## Task-related part of the program
+To do something with data already in frame format.
+
+[IN PROGRESS]
+
+___
+
 # Data structures and IDs
 
 ## ID ranges
@@ -42,12 +60,14 @@
 | 0x81 | emergency | emergency stop | 1 bool |
 
 ____
+
 # NOTE
 - All the protocol bytes are little endian
+
 ____
 
 # Build and Testing
 1. To run tests:
 ```bash
-make run-test
+make run_test
 ```
