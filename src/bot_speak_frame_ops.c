@@ -1,5 +1,5 @@
+#include <string.h>
 #include "bot_speak.h"
-#include <errno.h>
 
 void botSpeak_serialize(void* sourceBuffer, uint8_t numberElements, uint8_t elementSize, uint8_t* destinationBuffer, uint8_t* destinationLength) {
 

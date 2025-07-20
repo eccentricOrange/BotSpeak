@@ -1,6 +1,5 @@
-#include <stdio.h>
+#include <stdlib.h>
 #include <stdint.h>
-#include <string.h>
 
 #ifndef BOT_SPEAK_H__
 #define BOT_SPEAK_H__

@@ -1,4 +1,3 @@
-
 #include <errno.h>
 #include "bot_speak.h"
 
