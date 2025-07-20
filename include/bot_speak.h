@@ -7,6 +7,8 @@
 #define START_BYTE (uint8_t)0xAA
 #define END_BYTE (uint8_t)0xBB
 
+#define BOT_SPEAK_MIN_PACKET_SIZE (1 + 4 + 1 + 4 + 1)
+
 typedef struct {
 
     uint32_t frameID;
