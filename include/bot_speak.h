@@ -23,10 +23,10 @@ int botSpeak_packFrame(DataFrame_TypeDef* sourceFrame, uint8_t* destinationBuffe
 int botSpeak_unpackFrame(DataFrame_TypeDef* destinationFrame, uint8_t* sourceBuffer, uint8_t sourceLength);
 
 int parseFrameID(DataFrame_TypeDef* frame);
-int parseConfigFrame(DataFrame_TypeDef* frame);
-int parseRequestFrame(DataFrame_TypeDef* frame);
-int parseDataFrame(DataFrame_TypeDef* frame);
-int parseCommandFrame(DataFrame_TypeDef* frame);
-int parseEmergencyFrame(DataFrame_TypeDef* frame);
+extern int parseConfigFrame(DataFrame_TypeDef* frame);
+extern int parseRequestFrame(DataFrame_TypeDef* frame);
+extern int parseResponseFrame(DataFrame_TypeDef* frame);
+extern int parseCommandFrame(DataFrame_TypeDef* frame);
+extern int parseEmergencyFrame(DataFrame_TypeDef* frame);
 
 #endif // BOT_SPEAK_H__
