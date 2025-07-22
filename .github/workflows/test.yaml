@@ -1,0 +1,22 @@
+name: Test System
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Compile code
+        run: make test
+
+      - name: Test Frame Operations
+        run: ./build/test_frame_ops
