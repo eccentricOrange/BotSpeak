@@ -33,14 +33,20 @@ ___
 | 0x00 | config | protocol_switch | 1 uint_8 |
 | 0x01 | config | imu on/off | 1 bool |
 | 0x02 | config | imu processing | 1 bool |
-| 0x03 | config | imu rate | 1 uint_16 |
+| 0x03 | config | imu rate | 1 uint_32 |
 | 0x04 | config | encoder on/off | 1 bool |
 | 0x05 | config | encoder processing | 1 bool |
-| 0x06 | config | encoder rate | 1 uint_16 |
-| 0x07 | config | motor current meas on/off | 1 bool |
-| 0x08 | config | motor current meas rate | 1 uint_16 |
-| 0x09 | config | battery voltage meas on/off | 1 bool |
-| 0x0A | config | battery voltage meas rate | 1 uint_16 |
+| 0x06 | config | encoder rate | 1 uint_32 |
+| 0x07 | config | encoder CPR | 1 uint_32 |
+| 0x08 | config | motor current meas on/off | 1 bool |
+| 0x09 | config | motor current meas rate | 1 uint_32 |
+| 0x0A | config | motor closed loop on/off | 1 bool |
+| 0x0B | config | motor closed loop rate | 1 uint_32 |
+| 0x0C | config | motor closed loop KP | 1 float_32 |
+| 0x0D | config | motor closed loop KI | 1 float_32 |
+| 0x0E | config | motor closed loop KD | 1 float_32 |
+| 0x0F | config | battery voltage meas on/off | 1 bool |
+| 0x10 | config | battery voltage meas rate | 1 uint_32 |
 | 0x21 | request | imu raw | 0 (no data bytes) |
 | 0x22 | request | imu processed | 0 (no data bytes) |
 | 0x23 | request | imu both | 0 (no data bytes) |
@@ -48,14 +54,14 @@ ___
 | 0x26 | request | motor current | 0 (no data bytes) |
 | 0x27 | request | battery voltage | 0 (no data bytes) |
 | 0x28 | request | user defined button | 0 (no data bytes) |
-| 0x41 | response | imu raw | 6 uint_32 |
-| 0x42 | response | imu processed | 4 uint_32 |
-| 0x43 | response | imu both | 10 uint_32 |
-| 0x44 | response | encoder positions and velocities | 8 uint_32 |
-| 0x46 | response | motor current | 4 uint_32 |
-| 0x47 | response | battery voltage | 1 uint_32 |
+| 0x41 | response | imu raw | 9 uint_16 |
+| 0x42 | response | imu processed | 4 float_32 |
+| 0x43 | response | imu both | 9 uint_16 + 4 float_32 |
+| 0x44 | response | encoder positions and velocities | 4 int_64 + 4 float |
+| 0x46 | response | motor current | 4 float_32 |
+| 0x47 | response | battery voltage | 1 float_32 |
 | 0x48 | response | user defined button | 1 bool |
-| 0x60 | commands | motor desired RPMs | 4 int_32 |
+| 0x60 | commands | motor desired RPMs | 4 float_32 |
 | 0x61 | commands | user defined LED | 1 uint_16 |
 | 0x81 | emergency | emergency stop | 1 bool |
 
