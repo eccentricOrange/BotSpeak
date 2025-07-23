@@ -49,18 +49,18 @@ ___
 | 0x10 | config | battery voltage meas rate | 1 uint_32 |
 | 0x21 | request | imu raw | 0 (no data bytes) |
 | 0x22 | request | imu processed | 0 (no data bytes) |
-| 0x23 | request | imu both | 0 (no data bytes) |
-| 0x24 | request | encoder positions and velocities | 0 (no data bytes) |
-| 0x26 | request | motor current | 0 (no data bytes) |
-| 0x27 | request | battery voltage | 0 (no data bytes) |
-| 0x28 | request | user defined button | 0 (no data bytes) |
+| 0x23 | request | encoder positions | 0 (no data bytes) |
+| 0x24 | request | encoder velocities | 0 (no data bytes) |
+| 0x25 | request | motor current | 0 (no data bytes) |
+| 0x26 | request | battery voltage | 0 (no data bytes) |
+| 0x27 | request | user defined button | 0 (no data bytes) |
 | 0x41 | response | imu raw | 9 uint_16 |
 | 0x42 | response | imu processed | 4 float_32 |
-| 0x43 | response | imu both | 9 uint_16 + 4 float_32 |
-| 0x44 | response | encoder positions and velocities | 4 int_64 + 4 float |
-| 0x46 | response | motor current | 4 float_32 |
-| 0x47 | response | battery voltage | 1 float_32 |
-| 0x48 | response | user defined button | 1 bool |
+| 0x43 | response | encoder positions | 4 int_64 |
+| 0x44 | response | encoder velocities | 4 float_32 |
+| 0x45 | response | motor current | 4 float_32 |
+| 0x46 | response | battery voltage | 1 float_32 |
+| 0x47 | response | user defined button | 1 bool |
 | 0x60 | commands | motor desired RPMs | 4 float_32 |
 | 0x61 | commands | user defined LED | 1 uint_16 |
 | 0x81 | emergency | emergency stop | 1 bool |
