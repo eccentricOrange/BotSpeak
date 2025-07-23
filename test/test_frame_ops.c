@@ -192,8 +192,6 @@ int testMotorCurrentRequestFrameUnpacking() {
     if (status != 0) {
         return status;
     }
-
-    printf("\n[FRAME UNPACKING TEST PASSED]\n");
     return 0;
 }
 
@@ -359,6 +357,6 @@ int main() {
     }
 
 
-    printf("All tests completed.\n");
+    printf("\nAll tests completed.\n");
     return 0;
 }
