@@ -1,4 +1,5 @@
 #include <string.h>
+#include <errno.h>
 #include "bot_speak.h"
 
 void botSpeak_serialize(void* sourceBuffer, uint8_t numberElements, uint8_t elementSize, uint8_t* destinationBuffer, uint8_t* destinationLength) {
@@ -17,6 +18,23 @@ void botSpeak_serialize(void* sourceBuffer, uint8_t numberElements, uint8_t elem
 
     // Set the total length of the destination buffer
     *destinationLength = numberElements * elementSize;
+}
+
+void botSpeak_deserialize(void* destinationBuffer, uint8_t *numberElements, uint8_t elementSize, uint8_t* sourceBuffer, uint8_t sourceLength) {
+
+    uint8_t* destination_pointer = (uint8_t*)destinationBuffer;
+    int index;
+
+    // Convert from little-endian format
+    for (uint8_t i = 0; i < sourceLength / elementSize; ++i) {
+        for (uint8_t j = 0; j < elementSize; ++j) {
+            index = (i * elementSize) + j;
+            destination_pointer[index] = sourceBuffer[index];
+        }
+    }
+
+    // Set the number of elements
+    *numberElements = sourceLength / elementSize;
 }
 
 int botSpeak_packFrame(DataFrame_TypeDef* sourceFrame, uint8_t* destinationBuffer, uint8_t* destinationLength) {
@@ -48,6 +66,36 @@ int botSpeak_packFrame(DataFrame_TypeDef* sourceFrame, uint8_t* destinationBuffe
 
     // End byte
     destinationBuffer[(*destinationLength)-1] = END_BYTE;
+
+    return 0;
+}
+
+
+int botSpeak_unpackFrame(DataFrame_TypeDef* destinationFrame, uint8_t* sourceBuffer, uint8_t sourceLength) {
+
+    if (sourceLength < BOT_SPEAK_MIN_PACKET_SIZE || sourceBuffer[0] != START_BYTE || sourceBuffer[sourceLength - 1] != END_BYTE) {
+        return -EINVAL; // Invalid frame
+    }
+
+    // Extract timestamp
+    destinationFrame->timestamp = (sourceBuffer[1]) | (sourceBuffer[2] << 8) | (sourceBuffer[3] << 16) | (sourceBuffer[4] << 24);
+
+    // Extract data length
+    destinationFrame->dataLength = sourceBuffer[5];
+
+    // Extract frame ID
+    destinationFrame->frameID = (sourceBuffer[6]) | (sourceBuffer[7] << 8) | (sourceBuffer[8] << 16) | (sourceBuffer[9] << 24);
+
+    // Allocate memory for data if data length is greater than zero
+    if (destinationFrame->dataLength > 0) {
+        destinationFrame->data = malloc(destinationFrame->dataLength);
+        if (!destinationFrame->data) {
+            return -ENOMEM; // Memory allocation failed
+        }
+        memcpy(destinationFrame->data, &sourceBuffer[10], destinationFrame->dataLength);
+    } else {
+        destinationFrame->data = NULL;
+    }
 
     return 0;
 }
