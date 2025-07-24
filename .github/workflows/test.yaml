@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Compile code
-        run: make test
+        run: make test_frame_ops
 
       - name: Test Frame Operations
-        run: ./build/test_frame_ops
+        run: ./bin/test_frame_ops

@@ -75,5 +75,5 @@ ____
 # Build and Testing
 1. To run tests:
 ```bash
-make run_test
+make run_test_frame_ops
 ```

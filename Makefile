@@ -1,67 +1,59 @@
-# Compiler and flags
+# Define build directory
+BUILD_DIR = bin
+
+# Compiler commands and flags
 CC = gcc
-CFLAGS = -Wall -Wextra -std=c11 -I./include
-LDFLAGS =
+CXX = g++
+CFLAGS = -Iinclude -Wall -Wextra -g
+CXXFLAGS = -Iinclude -Wall -Wextra -g
 
-# Directories
-BUILD_DIR = ./build
-SRC_DIR = ./src
-TEST_DIR = ./test
-INC_DIR = ./include
+# Source files
+BOT_SPEAK_SRC = src/bot_speak_frame_ops.c
+TEST_FRAME_OPS_SRC = test/test_frame_ops.c
+TEST_REAL_WORLD_SRC = test/test_real_world.cpp
 
-# Library details
-LIB_NAME = bot_speak
-LIB_FILE = $(BUILD_DIR)/lib$(LIB_NAME).a
-SRC_FILES = $(wildcard $(SRC_DIR)/*.c)
-OBJ_FILES = $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(SRC_FILES))
+# Output names
+BUILD_DIR_TASK = mkdir_build
+BOT_SPEAK_LIB = $(BUILD_DIR)/libbotspeak.a
+TEST_FRAME_OPS_BIN = $(BUILD_DIR)/test_frame_ops
+TEST_REAL_WORLD_BIN = $(BUILD_DIR)/test_real_world
 
-# Test details
-TEST_SRC = $(TEST_DIR)/test_frame_ops.c
-TEST_EXEC = $(BUILD_DIR)/test_frame_ops
-
-.PHONY: all build test run_test clean
-
-# Default target: builds library, test, and runs the test
-all: run_test
-
-# Create build directory if it doesn't exist
-$(BUILD_DIR):
+# Create the build directory if it doesn't exist
+$(BUILD_DIR_TASK):
 	@mkdir -p $(BUILD_DIR)
 
-# -----------------------------------------------------------------------------
-# Command to build the library itself (now aliased as 'build')
-# -----------------------------------------------------------------------------
-build: $(LIB_FILE)
+.PHONY: all build lib test_frame_ops test_real_world run_test_frame_ops run_test_real_world clean
 
-$(LIB_FILE): $(OBJ_FILES) $(BUILD_DIR)
-	@echo "Building library: $(LIB_FILE)"
-	ar rcs $(LIB_FILE) $(OBJ_FILES)
-	@echo "Library built successfully."
+# Default target: alias for 'build'
+all: build
 
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c $(BUILD_DIR)
-	@echo "Compiling $<..."
-	$(CC) $(CFLAGS) -c $< -o $@
+# Alias for 'lib'
+build: lib
 
-# -----------------------------------------------------------------------------
-# Command to build the test (with the library)
-# -----------------------------------------------------------------------------
-test: $(TEST_EXEC)
+# Compile botSpeak C source into a static library
+# Dependencies: Requires the build directory to exist
+lib: $(BUILD_DIR_TASK) $(BOT_SPEAK_SRC)
+	$(CC) $(CFLAGS) -c $(BOT_SPEAK_SRC) -o $(BUILD_DIR)/bot_speak_frame_ops.o
+	ar rcs $(BOT_SPEAK_LIB) $(BUILD_DIR)/bot_speak_frame_ops.o
 
-$(TEST_EXEC): $(TEST_SRC) $(LIB_FILE) $(BUILD_DIR)
-	@echo "Building test executable: $(TEST_EXEC)"
-	$(CC) $(CFLAGS) $(TEST_SRC) $(LIB_FILE) -o $@ $(LDFLAGS)
-	@echo "Test executable built successfully."
+# Compile test/test_frame_ops.c with botSpeak library dependency
+# Dependencies: Requires the botSpeak library to be built and the build directory to exist
+test_frame_ops: lib $(BUILD_DIR_TASK) $(BOT_SPEAK_LIB) $(TEST_FRAME_OPS_SRC)
+	$(CC) $(CFLAGS) $(TEST_FRAME_OPS_SRC) $(BOT_SPEAK_LIB) -o $(TEST_FRAME_OPS_BIN)
 
-# -----------------------------------------------------------------------------
-# Command to run the test (with building the test)
-# -----------------------------------------------------------------------------
-run_test: test
-	@echo "Running tests..."
-	@$(TEST_EXEC)
+# Compile test/test_real_world.cpp with botSpeak library and libserial dependencies
+# Dependencies: Requires the botSpeak library to be built and the build directory to exist
+# test_real_world: lib $(BUILD_DIR_TASK) $(BOT_SPEAK_LIB) $(TEST_REAL_WORLD_SRC)
+# 	$(CXX) $(CXXFLAGS) $(TEST_REAL_WORLD_SRC) $(BOT_SPEAK_LIB) -lserial -o $(TEST_REAL_WORLD_BIN)
+
+# Run and compile test_frame_ops
+run_test_frame_ops: test_frame_ops
+	$(TEST_FRAME_OPS_BIN)
+
+# Run and compile test_real_world
+# run_test_real_world: test_real_world
+# 	$(TEST_REAL_WORLD_BIN)
 
 # Clean up build artifacts
 clean:
-	@echo "Cleaning up build directory..."
-	@rm -rf $(BUILD_DIR)
-	@echo "Clean complete."
-
+	rm -rf $(BUILD_DIR)

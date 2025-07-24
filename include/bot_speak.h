@@ -10,6 +10,10 @@
 #ifndef BOT_SPEAK_H__
 #define BOT_SPEAK_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /// @brief Start byte for BotSpeak packets (SOF: Start of Frame)
 #define START_BYTE (uint8_t)0xAA
 
@@ -69,5 +73,10 @@ int botSpeak_packFrame(DataFrame_TypeDef* sourceFrame, uint8_t* destinationBuffe
  * @return `int` Returns 0 on success, or an error code on failure.
  */
 int botSpeak_unpackFrame(DataFrame_TypeDef* destinationFrame, uint8_t* sourceBuffer, uint8_t sourceLength);
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // BOT_SPEAK_H__
