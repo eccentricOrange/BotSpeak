@@ -22,7 +22,8 @@ TEST_REAL_WORLD_BIN = $(BUILD_DIR)/test_real_world
 $(BUILD_DIR_TASK):
 	@mkdir -p $(BUILD_DIR)
 
-.PHONY: all build lib test_frame_ops test_real_world run_test_frame_ops run_test_real_world clean
+# .PHONY: all build lib test_frame_ops test_real_world run_test_frame_ops run_test_real_world clean
+.PHONY: all build lib test_frame_ops run_test_frame_ops clean
 
 # Default target: alias for 'build'
 all: build
