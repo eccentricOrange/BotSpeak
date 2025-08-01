@@ -34,7 +34,7 @@ int main()
 
     while (1)
     {
-        serialPort.write((const char *)dataBuffer, dataLength);\
+        serialPort.write((const char *)dataBuffer, dataLength);
 
         // Wait for a response
         uint8_t responseBuffer[256];
