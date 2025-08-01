@@ -73,7 +73,39 @@ ____
 ____
 
 # Build and Testing
-1. To run tests:
-```bash
-make run_test_frame_ops
-```
+
+## With `colcon` (ROS 2)
+1. Navigate to your workspace root.
+2. Build the package:
+   ```bash
+   colcon build --packages-select botspeak
+   ```
+3. Source the workspace:
+   ```bash
+   source install/setup.bash
+   ```
+4. Run the executables:
+   ```bash
+   ros2 run botspeak test_frame_ops
+   ros2 run botspeak test_real_world
+   ```
+
+## With traditional `cmake`
+1. Create a build directory:
+   ```bash
+   mkdir build && cd build
+   ```
+2. Configure and build:
+   ```bash
+   cmake ..
+   make
+   ```
+3. Run the executables from the `build` directory:
+   ```bash
+   ./test_frame_ops
+   ./test_real_world
+   ```
+4. Optionally, install the library and executables (may require `sudo`):
+   ```bash
+   sudo make install
+   ```
