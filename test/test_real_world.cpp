@@ -3,7 +3,7 @@
 #include "bot_speak.h"
 #include "int_brain_messages.h"
 
-#define SERIAL_PORT "/dev/serial/by-id/usb-STMicroelectronics_IntBrain_VCP_315936583034-if00"
+#define SERIAL_PORT "/dev/int-brain-316436653034"
 
 int main()
 {
