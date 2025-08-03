@@ -58,13 +58,10 @@ int main()
             return 1;
         }
 
+        printf("[TIMESTAMP: %f s] ", responseFrame.timestamp / 1000.0);
+
         botSpeak_deserialize(readData, &numberElements, sizeof(float), responseFrame.data, responseFrame.dataLength);
         printf("Deserialized Data: ");
-        for (uint8_t i = 0; i < numberElements; ++i)
-        {
-            printf("%f ", readData[i]);
-        }
-
         for (uint8_t i = 0; i < numberElements; ++i)
         {
             printf("%f ", readData[i]);

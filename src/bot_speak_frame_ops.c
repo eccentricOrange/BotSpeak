@@ -88,7 +88,7 @@ int botSpeak_unpackFrame(DataFrame_TypeDef* destinationFrame, uint8_t* sourceBuf
 
     // Allocate memory for data if data length is greater than zero
     if (destinationFrame->dataLength > 0) {
-        destinationFrame->data = malloc(destinationFrame->dataLength);
+        destinationFrame->data = (uint8_t*)malloc(destinationFrame->dataLength);
         if (!destinationFrame->data) {
             return -ENOMEM; // Memory allocation failed
         }
