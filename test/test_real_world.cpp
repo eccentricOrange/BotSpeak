@@ -3,7 +3,9 @@
 #include "bot_speak.h"
 #include "int_brain_messages.h"
 
-#define SERIAL_PORT "/dev/int-brain-316436653034"
+/// @brief Hardware serial port for the Integrated Brain, as an example.
+/// @details This should be replaced with the actual serial port used by your device.
+#define SERIAL_PORT "/dev/int-brain-xxxxxxxxxxxx"
 
 int main()
 {
