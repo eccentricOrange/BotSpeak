@@ -7,7 +7,9 @@
 	},
 
 	// Add USB device
-	"runArgs": ["--device", "/dev/ttyACM0"]
+	"runArgs": [
+		"--device", "/dev/int-brain-316436653034"
+	]
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
