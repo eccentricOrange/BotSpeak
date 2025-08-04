@@ -43,12 +43,12 @@ int main()
         std::streamsize bytesToRead = BOT_SPEAK_MIN_PACKET_SIZE + IMU_RAW_BYTES;
         serialPort.read((char *)responseBuffer, bytesToRead);
 
-        // // Print raw response data
-        // printf("Received response: ");
-        // for (size_t i = 0; i < bytesToRead; ++i) {
-        //     printf("%02X ", responseBuffer[i]);
-        // }
-        // printf("\n");
+        // Print raw response data
+        printf("Received response: ");
+        for (size_t i = 0; i < bytesToRead; ++i) {
+            printf("%02X ", responseBuffer[i]);
+        }
+        printf("\n");
 
         DataFrame_TypeDef responseFrame;
         int result = botSpeak_unpackFrame(&responseFrame, responseBuffer, bytesToRead);
