@@ -44,11 +44,11 @@ int main()
         serialPort.read((char *)responseBuffer, bytesToRead);
 
         // Print raw response data
-        printf("Received response: ");
-        for (size_t i = 0; i < bytesToRead; ++i) {
-            printf("%02X ", responseBuffer[i]);
-        }
-        printf("\n");
+        // printf("Received response: ");
+        // for (size_t i = 0; i < bytesToRead; ++i) {
+        //     printf("%02X ", responseBuffer[i]);
+        // }
+        // printf("\n");
 
         DataFrame_TypeDef responseFrame;
         int result = botSpeak_unpackFrame(&responseFrame, responseBuffer, bytesToRead);
