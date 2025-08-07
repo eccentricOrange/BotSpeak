@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "bot_speak.h"
+#include "int_brain_messages.h"
 
 
 /// @brief Since we run on a resource-rich environment, we can afford to use a larger buffer for testing.
@@ -242,7 +243,7 @@ int testResponseFrameUnpacking(DataFrame_TypeDef* expectedFrame, uint8_t* source
 int testMotorCurrentRequestFramePacking() {
     /// @brief Request frame with no data.
     DataFrame_TypeDef requestFrame = {
-        .frameID = 0x26,
+        .frameID = REQUEST_MOTOR_CURRENT,
         .timestamp = 0x12345678,
         .dataLength = 0,
         .data = NULL
@@ -253,7 +254,7 @@ int testMotorCurrentRequestFramePacking() {
         START_BYTE,             // SOF
         0x78, 0x56, 0x34, 0x12, // Timestamp
         0,                      // Data length
-        0x26, 0x00, 0x00, 0x00, // Frame ID
+        0x25, 0x00, 0x00, 0x00, // Frame ID
         END_BYTE                // EOF
     };
 
@@ -270,16 +271,16 @@ int testMotorCurrentRequestFramePacking() {
  */
 int motorCurrentResponseFramePacking() {
     // Serialize the input current values into a byte-array.
-    uint32_t currentValues[4] = {0x3931, 0x32BD, 0x31AB, 0x72392313};
-    uint8_t serialisedResponseData[16];
+    uint32_t currentValues[UNSERIALIZED_MOTOR_CURRENT_SIZE] = {0x3931, 0x32BD, 0x31AB, 0x72392313};
+    uint8_t serialisedResponseData[SERIALIZED_MOTOR_CURRENT_BYTES];
     uint8_t serialisedResponseLength;
-    botSpeak_serialize(currentValues, 4, sizeof(uint32_t), serialisedResponseData, &serialisedResponseLength);
+    botSpeak_serialize(currentValues, UNSERIALIZED_MOTOR_CURRENT_SIZE, sizeof(uint32_t), serialisedResponseData, &serialisedResponseLength);
 
     /// @brief Response frame with the serialized data.
     DataFrame_TypeDef responseFrame = {
-        .frameID = 0x46,
+        .frameID = RESPONSE_MOTOR_CURRENT,
         .timestamp = 0x87654321,
-        .dataLength = 16,
+        .dataLength = SERIALIZED_MOTOR_CURRENT_BYTES,
         .data = serialisedResponseData
     };
 
@@ -288,7 +289,7 @@ int motorCurrentResponseFramePacking() {
         START_BYTE,             // SOF
         0x21, 0x43, 0x65, 0x87, // Timestamp
         16,                     // Data length
-        0x46, 0x00, 0x00, 0x00, // Frame ID
+        0x45, 0x00, 0x00, 0x00, // Frame ID
         0x31, 0x39, 0x00, 0x00, // Data[0]
         0xBD, 0x32, 0x00, 0x00, // Data[1]
         0xAB, 0x31, 0x00, 0x00, // Data[2]
@@ -311,7 +312,7 @@ int testMotorCurrentRequestFrameUnpacking() {
 
     /// @brief Expected request frame structure.
     DataFrame_TypeDef expectedRequestFrame = {
-        .frameID = 0x26,
+        .frameID = REQUEST_MOTOR_CURRENT,
         .timestamp = 0x12345678,
         .dataLength = 0,
         .data = NULL
@@ -322,7 +323,7 @@ int testMotorCurrentRequestFrameUnpacking() {
         START_BYTE,             // SOF
         0x78, 0x56, 0x34, 0x12, // Timestamp
         0,                      // Data length
-        0x26, 0x00, 0x00, 0x00, // Frame ID
+        0x25, 0x00, 0x00, 0x00, // Frame ID
         END_BYTE                // EOF
     };
 
@@ -342,7 +343,7 @@ int testMotorCurrentResponseFrameUnpacking() {
     int status;
 
     /// @brief Expected deserialized data (this is meaningful data).
-    uint32_t expectedDeserializedData[4] = {0x3931, 0x32BD, 0x31AB, 0x72392313};
+    uint32_t expectedDeserializedData[UNSERIALIZED_MOTOR_CURRENT_SIZE] = {0x3931, 0x32BD, 0x31AB, 0x72392313};
 
     /// @brief Expected serialized data (this is the byte-array representation).
     uint8_t expectedSerializedData[] = {
@@ -357,7 +358,7 @@ int testMotorCurrentResponseFrameUnpacking() {
         START_BYTE,             // SOF
         0x21, 0x43, 0x65, 0x87, // Timestamp
         16,                     // Data length
-        0x46, 0x00, 0x00, 0x00, // Frame ID
+        0x45, 0x00, 0x00, 0x00, // Frame ID
         0x31, 0x39, 0x00, 0x00, // Data[0]
         0xBD, 0x32, 0x00, 0x00, // Data[1]
         0xAB, 0x31, 0x00, 0x00, // Data[2]
@@ -367,9 +368,9 @@ int testMotorCurrentResponseFrameUnpacking() {
 
     /// @brief Expected response frame structure.
     DataFrame_TypeDef expectedResponseFrame = {
-        .frameID = 0x46,
+        .frameID = RESPONSE_MOTOR_CURRENT,
         .timestamp = 0x87654321,
-        .dataLength = 16,
+        .dataLength = SERIALIZED_MOTOR_CURRENT_BYTES,
         .data = expectedSerializedData
     };
 
@@ -385,13 +386,13 @@ int testMotorCurrentResponseFrameUnpacking() {
 
     // Attempt to deserialize the data field
     printf("\n\nTesting response frame deserialization...\n");
-    uint8_t deserializedData[16];
+    uint8_t deserializedData[SERIALIZED_MOTOR_CURRENT_BYTES];
     uint8_t deserializedLength;
     botSpeak_deserialize(deserializedData, &deserializedLength, sizeof(uint32_t), actualResponseFrame.data, actualResponseFrame.dataLength);
 
     // Check the deserialized data length
-    printf("[TESTING DESERIALIZED DATA LENGTH] expected: %d, actual: %d, ", 4, deserializedLength);
-    if (deserializedLength != 4) {
+    printf("[TESTING DESERIALIZED DATA LENGTH] expected: %d, actual: %d, ", UNSERIALIZED_MOTOR_CURRENT_SIZE, deserializedLength);
+    if (deserializedLength != UNSERIALIZED_MOTOR_CURRENT_SIZE) {
         printf("Failed!\n");
         return -1;
     } else {
