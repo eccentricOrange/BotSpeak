@@ -40,15 +40,16 @@ ___
 | 0x07 | config | encoder CPR | 1 uint_32 |
 | 0x08 | config | motor current meas on/off | 1 bool |
 | 0x09 | config | motor current meas rate | 1 uint_32 |
-| 0x0A | config | motor closed loop on/off | 1 bool |
-| 0x0B | config | motor closed loop rate | 1 uint_32 |
-| 0x0C | config | motor closed loop KP | 1 float_32 |
-| 0x0D | config | motor closed loop KI | 1 float_32 |
-| 0x0E | config | motor closed loop KD | 1 float_32 |
-| 0x0F | config | motor closed loop filter coeff | 1 float_32 |
+| 0x0A | config | motor controller mode | 1 uint_8 |
+| 0x0B | config | motor controller rate | 1 uint_32 |
+| 0x0C | config | motor PID KP values | 1 float_32 |
+| 0x0D | config | motor PID KI values | 1 float_32 |
+| 0x0E | config | motor PID KD values | 1 float_32 |
+| 0x0F | config | motor PID filter coefficients | 1 float_32 |
 | 0x10 | config | motor feedforward params | 2 float_32 |
-| 0x11 | config | battery voltage meas on/off | 1 bool |
-| 0x12 | config | battery voltage meas rate | 1 uint_32 |
+| 0x11 | config | motor reverse directions | 4 bool |
+| 0x12 | config | battery voltage meas on/off | 1 bool |
+| 0x13 | config | battery voltage meas rate | 1 uint_32 |
 | 0x21 | request | imu raw | 0 (no data bytes) |
 | 0x22 | request | imu processed | 0 (no data bytes) |
 | 0x23 | request | encoder positions | 0 (no data bytes) |
