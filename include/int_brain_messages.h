@@ -83,11 +83,11 @@ enum UnserializedDataSizes {
 	UNSERIALIZED_USER_DEFINED_LED_SIZE = 1,
 };
 
-enum MotorControllerMode {
+typedef enum {
 	EFFORT = 0,
 	FEED_FORWARD = 1,
 	PID_FEED_FORWARD = 2,
 	SIMPLE_PID = 3
-};
+} MotorControllerMode_TypeDef;
 
 #endif // INT_BRAIN_MESSAGES_H_
