@@ -254,7 +254,7 @@ int testMotorCurrentRequestFramePacking() {
         START_BYTE,             // SOF
         0x78, 0x56, 0x34, 0x12, // Timestamp
         0,                      // Data length
-        0x25, 0x00, 0x00, 0x00, // Frame ID
+        0x27, 0x00, 0x00, 0x00, // Frame ID
         END_BYTE                // EOF
     };
 
@@ -289,7 +289,7 @@ int motorCurrentResponseFramePacking() {
         START_BYTE,             // SOF
         0x21, 0x43, 0x65, 0x87, // Timestamp
         16,                     // Data length
-        0x45, 0x00, 0x00, 0x00, // Frame ID
+        0x47, 0x00, 0x00, 0x00, // Frame ID
         0x31, 0x39, 0x00, 0x00, // Data[0]
         0xBD, 0x32, 0x00, 0x00, // Data[1]
         0xAB, 0x31, 0x00, 0x00, // Data[2]
@@ -323,7 +323,7 @@ int testMotorCurrentRequestFrameUnpacking() {
         START_BYTE,             // SOF
         0x78, 0x56, 0x34, 0x12, // Timestamp
         0,                      // Data length
-        0x25, 0x00, 0x00, 0x00, // Frame ID
+        0x27, 0x00, 0x00, 0x00, // Frame ID
         END_BYTE                // EOF
     };
 
@@ -358,7 +358,7 @@ int testMotorCurrentResponseFrameUnpacking() {
         START_BYTE,             // SOF
         0x21, 0x43, 0x65, 0x87, // Timestamp
         16,                     // Data length
-        0x45, 0x00, 0x00, 0x00, // Frame ID
+        0x47, 0x00, 0x00, 0x00, // Frame ID
         0x31, 0x39, 0x00, 0x00, // Data[0]
         0xBD, 0x32, 0x00, 0x00, // Data[1]
         0xAB, 0x31, 0x00, 0x00, // Data[2]
