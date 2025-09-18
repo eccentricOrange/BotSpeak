@@ -1,7 +1,7 @@
 /**
  * @file bot_speak_be.h
  * @brief Function declarations for operations related to BotSpeak frames, when run on a Big Endian system.
- * @details A frame is the high-level data structure used to encapsulate a message.
+ * @details A frame is the high-level data structure used to encapsulate a message. This is meant to be a drop-in replacement for `bot_speak.h`.
  */
 
 #include <stdlib.h>

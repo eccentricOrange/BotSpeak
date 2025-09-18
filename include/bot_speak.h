@@ -1,6 +1,6 @@
 /**
  * @file bot_speak.h
- * @brief Function declarations for operations related to BotSpeak frames.
+ * @brief Function declarations for operations related to BotSpeak frames. This is mean to run on a Little Endian system.
  * @details A frame is the high-level data structure used to encapsulate a message.
  */
 
