@@ -12,16 +12,16 @@ A minimal protocol-agnostic communication framework and C library for communicat
 ## Data frame structure
 The data frame is adapted from the Serial Frame Format implemented in the Python CAN library. Source: https://python-can.readthedocs.io/en/stable/interfaces/serial.html#serial-frame-format
 
-However, our implementation allows for a message longer than 8 bytes, thus also a longer data length field.
+However, our implementation allows for a message longer than 8 bytes (up to 256 bytes). The frame structure is as follows:
 
 | Byte index | Name | Length | Value |
 | --- | --- | --- | --- |
 | $0$ | Start of Frame (SOF) | 1 byte | `0xAA` |
 | $1$ to $4$ | Frame ID | 4 bytes | Unique identifier for the data type |
-| $5$ to $8$ | Data Length | 4 bytes | Length of data payload $n$ |
-| $9$ to $12$ | Timestamp | 4 bytes | Timestamp of packet inception, expressed as a Unix timestamp |
-| $13$ to $(12+n)$ | Data | $n$ bytes | Actual data payload |
-| $(13 + n)$ | End of Frame (EOF) | 1 byte | `0xBB` |
+| $5$ | Data Length | 1 byte | Length of data payload $n$ |
+| $6$ to $9$ | Timestamp | 4 bytes | Timestamp of packet inception, expressed as a Unix timestamp |
+| $10$ to $(9+n)$ | Data | $n$ bytes | Actual data payload |
+| $(10 + n)$ | End of Frame (EOF) | 1 byte | `0xBB` |
 
 This is realised in the software as a structure:
 
