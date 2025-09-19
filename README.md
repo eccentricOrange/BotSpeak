@@ -1,87 +1,72 @@
-# Key terms and concepts
+# BotSpeak
 
-## Frame-related part of the program
-To do with conversions of data only.
+A minimal protocol-agnostic communication framework and C library for communication in systems with diverse message types. BotSpeak produces and consumes raw byte arrays, so it can be used over serial, CAN, or any other byte-stream based protocol. The Physical Layer and Data Link Layer of the OSI model should be handled by the developer.
 
-*   **Serialize:** Convert a meaningful data-type to a byte-array.
-*   **Deserialize:** Convert a byte-array to a meaningful data-type.
+## Key terms and concepts
+*   **Serialize:** Convert a meaningful data-type (such as a `float`) to a byte-array.
+*   **Deserialize:** Convert a byte-array to a meaningful data-type (such as a `float`).
 *   **Frame:** A high-level data structure. This contains the data as an ID, a length, a timestamp, and a byte-array. See `DataFrame_TypeDef`.
-*   **Pack frame:** Convert a byte-array into a frame.
-*   **Unpack frame:** Convert a frame into a byte-array.
+*   **Pack frame:** Convert a byte-array into a frame with metadata.
+*   **Unpack frame:** Convert a frame with metadata into a byte-array.
 
-## Task-related part of the program
-To do something with data already in frame format.
+## Data frame structure
+The data frame is adapted from the Serial Frame Format implemented in the Python CAN library. Source: https://python-can.readthedocs.io/en/stable/interfaces/serial.html#serial-frame-format
 
-[IN PROGRESS]
+However, our implementation allows for a message longer than 8 bytes (up to 256 bytes). The frame structure is as follows:
 
-___
+| Byte index | Name | Length | Value |
+| --- | --- | --- | --- |
+| $0$ | Start of Frame (SOF) | 1 byte | `0xAA` |
+| $1$ to $4$ | Frame ID | 4 bytes | Unique identifier for the data type |
+| $5$ | Data Length | 1 byte | Length of data payload $n$ |
+| $6$ to $9$ | Timestamp | 4 bytes | Timestamp of packet inception, expressed as a Unix timestamp |
+| $10$ to $(9+n)$ | Data | $n$ bytes | Actual data payload |
+| $(10 + n)$ | End of Frame (EOF) | 1 byte | `0xBB` |
 
-# Data structures and IDs
+This is realised in the software as a structure:
 
-## ID ranges
-| ID start | ID end | param type |
-| --- | --- | --- |
-| 0x00 | 0x1F | config |
-| 0x20 | 0x3F | request |
-| 0x40 | 0x5F | response |
-| 0x60 | 0x7F | commands |
-| 0x80 | 0x9F | emergency |
+```c
+typedef struct {
+    uint32_t frameID;
+    uint32_t timestamp;
+    uint8_t dataLength;
+    uint8_t* data;
+} DataFrame_TypeDef;
+```
 
-## Exact fields
-| ID | param type | param subtype | size | physical unit |
-| --- | --- | --- | --- | --- |
-| 0x00 | config | protocol_switch | 1 uint_8 | - |
-| 0x01 | config | imu on/off | 1 bool | - |
-| 0x02 | config | imu processing | 1 bool | - |
-| 0x03 | config | imu rate | 1 uint_32 | Hz |
-| 0x04 | config | encoder on/off | 1 bool | - |
-| 0x05 | config | encoder processing | 1 bool | - |
-| 0x06 | config | encoder rate | 1 uint_32 | Hz |
-| 0x07 | config | encoder CPR | 1 uint_32 | - |
-| 0x08 | config | motor current meas on/off | 1 bool | - |
-| 0x09 | config | motor current meas rate | 1 uint_32 | Hz |
-| 0x0A | config | motor controller mode | 1 uint_8 | - |
-| 0x0B | config | motor controller rate | 1 uint_32 | Hz |
-| 0x0C | config | motor PID KP values | 1 float_32 | - |
-| 0x0D | config | motor PID KI values | 1 float_32 | - |
-| 0x0E | config | motor PID KD values | 1 float_32 | - |
-| 0x0F | config | motor PID filter coefficients | 1 float_32 | - |
-| 0x10 | config | motor feedforward params | 2 float_32 | - |
-| 0x11 | config | motor reverse directions | 4 bool | - |
-| 0x12 | config | battery voltage meas on/off | 1 bool | - |
-| 0x13 | config | battery voltage meas rate | 1 uint_32 | Hz |
-| 0x21 | request | imu gyro raw | 0 (no data bytes) | - |
-| 0x22 | request | imu accel raw | 0 (no data bytes) | - |
-| 0x23 | request | imu mag raw | 0 (no data bytes) | - |
-| 0x24 | request | imu processed | 0 (no data bytes) | - |
-| 0x25 | request | encoder positions | 0 (no data bytes) | - |
-| 0x26 | request | encoder velocities | 0 (no data bytes) | - |
-| 0x27 | request | motor current | 0 (no data bytes) | - |
-| 0x28 | request | battery voltage | 0 (no data bytes) | - |
-| 0x29 | request | user defined button | 0 (no data bytes) | - |
-| 0x41 | response | imu gyro raw | 3 float_32 | rad / s |
-| 0x42 | response | imu accel raw | 3 float_32 | m / s^2 |
-| 0x43 | response | imu mag raw | 3 float_32 | uT |
-| 0x44 | response | imu processed | 4 float_32 | quaternion |
-| 0x45 | response | encoder positions | 4 int_64 | ticks |
-| 0x46 | response | encoder velocities | 4 float_32 | rad / s |
-| 0x47 | response | motor current | 4 float_32 | A |
-| 0x48 | response | battery voltage | 1 float_32 | V |
-| 0x49 | response | user defined button | 1 bool | - |
-| 0x60 | commands | motor desired speed | 4 float_32 | rad / s |
-| 0x61 | commands | user defined LED | 1 uint_16 | - |
-| 0x81 | emergency | emergency stop | 1 bool | - |
+## Typical usage flow
 
-____
+![usage-flow](docs/usage-flow.drawio.svg)
 
-# NOTE
-- All the protocol bytes are little endian
+BotSpeak handles the end-to-end conversion from useful data types (e.g., an array of floats) to a byte array directly usable for transmission, and vice versa.
 
-____
+It is recommended to define a set of IDs, and data sizes for your application. An example, implemented using Enums, is provided with this library. Please see [Integrated Brain Conventions Documentation](docs/int-brain-conventions.md) for more details.
 
-# Build and Testing
+Typical usage steps:
 
-## With `colcon` (ROS 2)
+1. **Serialize data:** Convert useful data types to a byte array using the provided type-agnostic serialization function. If you're providing an array, you're required to provide the size of each element.
+
+1. **Generate a data frame:** Create a `DataFrame_TypeDef` structure with the frame ID, timestamp, and serialized byte array. Simply populate an instance of type `DataFrame_TypeDef`.
+
+1. **Pack the frame into bytes:** Generate a transmission-ready byte array from the `DataFrame_TypeDef` structure using the provided packing function.
+
+1. **Transmit the byte array:** Send the packed byte array over your chosen communication protocol (e.g., UART, CAN, USB).
+
+1. **Receive a byte array:** Receive a byte array from your communication protocol.
+
+1. **Unpack the received byte array into a frame:** Convert the received byte array back into a `DataFrame_TypeDef` structure using the provided unpacking function.
+
+1. **Deserialize the data:** Convert the byte array in the `DataFrame_TypeDef` structure back into useful data types using the provided deserialization function.
+
+Make sure to include the BotSpeak header in your source files:
+
+```c
+#include "bot_speak.h"
+```
+
+## Build and Testing
+
+### With `colcon` (ROS 2)
 1. Navigate to your workspace root.
 2. Build the package:
    ```bash
@@ -97,7 +82,7 @@ ____
    ros2 run botspeak test_real_world
    ```
 
-## With traditional `cmake`
+### With traditional `cmake`
 1. Create a build directory:
    ```bash
    mkdir build && cd build

@@ -8,7 +8,7 @@
 
 	// Add USB device
 	"runArgs": [
-		"--device", "/dev/int-brain-316436653034"
+		"--device", "/dev/int-brain-xxxxxxxxxxxx"
 	]
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
