@@ -20,3 +20,6 @@ jobs:
 
       - name: Test Frame Operations
         run: ./build/test_frame_ops
+
+      - name: Test Big-Endian Frame Operations
+        run: ./build/test_frame_ops_be
