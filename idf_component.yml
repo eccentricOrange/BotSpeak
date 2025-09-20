@@ -1,0 +1,7 @@
+name: "BotSpeak"
+version: "0.4"
+description: "A minimal protocol-agnostic communication framework and C library for systems with diverse message types."
+maintainers:
+  - "eccentricOrange"
+  - "exMachina316"
+license: "GPL-3.0"

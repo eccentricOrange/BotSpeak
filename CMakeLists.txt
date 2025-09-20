@@ -1,4 +1,15 @@
 cmake_minimum_required(VERSION 3.8)
+
+# If we are inside ESP-IDF
+if(DEFINED ENV{IDF_PATH} AND DEFINED IDF_TARGET)
+    idf_component_register(
+        SRCS "src/bot_speak_frame_ops.c"
+        INCLUDE_DIRS "include"
+    )
+    return()
+endif()
+
+# Otherwise: normal CMake build
 project(botspeak)
 
 option(TESTING "Build the test_real_world executable" OFF)
@@ -29,7 +40,6 @@ install(DIRECTORY
 
 install(EXPORT botspeak_targets
   FILE botspeakTargets.cmake
-  # NAMESPACE botspeak::
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/botspeak
 )
 
@@ -56,17 +66,16 @@ install(TARGETS
 )
 
 if(TESTING)
+  find_package(PkgConfig REQUIRED)
+  pkg_check_modules(Serial REQUIRED IMPORTED_TARGET libserial)
 
   add_executable(test_real_world
     test/test_real_world.cpp
   )
   target_link_libraries(test_real_world botspeak PkgConfig::Serial)
 
-  find_package(PkgConfig REQUIRED)
-  pkg_check_modules(Serial REQUIRED IMPORTED_TARGET libserial)
   install(TARGETS
       test_real_world
       RUNTIME DESTINATION bin
   )
-
 endif()
