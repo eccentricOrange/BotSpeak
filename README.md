@@ -1,6 +1,6 @@
 # BotSpeak
 
-A minimal protocol-agnostic communication framework and C library for communication in systems with diverse message types. BotSpeak produces and consumes raw byte arrays, so it can be used over serial, CAN, or any other byte-stream based protocol. The Physical Layer and Data Link Layer of the OSI model should be handled by the developer.
+A minimal protocol-agnostic communication framework and C library for in systems with diverse message types. BotSpeak produces and consumes raw byte arrays, so it can be used over serial, CAN, or any other byte-stream based protocol. The Physical Layer and Data Link Layer of the OSI model should be handled by the developer.
 
 ## Key terms and concepts
 *   **Serialize:** Convert a meaningful data-type (such as a `float`) to a byte-array.
@@ -38,7 +38,7 @@ typedef struct {
 
 ![usage-flow](docs/usage-flow.drawio.svg)
 
-BotSpeak handles the end-to-end conversion from useful data types (e.g., an array of floats) to a byte array directly usable for transmission, and vice versa.
+BotSpeak handles the end-to-end conversion from useful data types (e.g., an array of floats) to a byte array directly usable for transmission, and vice versa. BotSpeak is designed to transmit receive Little-Endian data, and a separate header is provided for Big-Endian hosts.
 
 It is recommended to define a set of IDs, and data sizes for your application. An example, implemented using Enums, is provided with this library. Please see [Integrated Brain Conventions Documentation](docs/int-brain-conventions.md) for more details.
 
@@ -64,40 +64,62 @@ Make sure to include the BotSpeak header in your source files:
 #include "bot_speak.h"
 ```
 
+> [!NOTE]
+> If you're working on a Big-Endian system, include the Big-Endian specific header instead:
+> ```c
+> #include "bot_speak_be.h"
+> ```
+
 ## Build and Testing
 
 ### With `colcon` (ROS 2)
+
 1. Navigate to your workspace root.
+
 2. Build the package:
+
    ```bash
    colcon build --packages-select botspeak
    ```
+
 3. Source the workspace:
+
    ```bash
    source install/setup.bash
    ```
+
 4. Run the executables:
+
    ```bash
    ros2 run botspeak test_frame_ops
+   ros2 run botspeak test_frame_ops_be
    ros2 run botspeak test_real_world
    ```
 
 ### With traditional `cmake`
+
 1. Create a build directory:
+
    ```bash
    mkdir build && cd build
    ```
+
 2. Configure and build:
+
    ```bash
    cmake ..
    make
    ```
+
 3. Run the executables from the `build` directory:
+
    ```bash
    ./test_frame_ops
    ./test_real_world
    ```
+
 4. Optionally, install the library and executables (may require `sudo`):
+
    ```bash
    sudo make install
    ```
