@@ -178,6 +178,8 @@ int testRequestFrameUnpacking(DataFrame_TypeDef* expectedFrame, uint8_t* sourceB
 int testResponseFrameUnpacking(DataFrame_TypeDef* expectedFrame, uint8_t* sourceBuffer, uint8_t sourceLength) {
     int status;
     DataFrame_TypeDef actualFrame;
+    uint8_t dataBuffer[TEST_BUFFER_SIZE]; // Temporary buffer to hold data
+    actualFrame.data = dataBuffer; // Point the data pointer to the temporary buffer
 
     // Attempt to unpack the frame from the source buffer, and store the result in `actualFrame`.
     printf("\n\nTesting response frame unpacking...\n");
@@ -376,6 +378,8 @@ int testMotorCurrentResponseFrameUnpacking() {
 
     // Unpack the response frame from the byte-array
     DataFrame_TypeDef actualResponseFrame;
+    uint8_t actualDataBuffer[TEST_BUFFER_SIZE]; // Temporary buffer to hold data
+    actualResponseFrame.data = actualDataBuffer; // Point the data pointer to the temporary buffer
     status = botSpeak_unpackFrame(&actualResponseFrame, responseBuffer, sizeof(responseBuffer));
 
     // Run the unpacking test and check the status
