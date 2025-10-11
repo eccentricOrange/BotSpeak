@@ -5,7 +5,6 @@
 void botSpeak_serialize(void* sourceBuffer, uint8_t numberElements, uint8_t elementSize, uint8_t* destinationBuffer, uint8_t* destinationLength) {
 
     uint8_t* source_pointer = (uint8_t*)sourceBuffer;
-    int index;
 
     // Use memcpy for direct copy since endianness does not change
     memcpy(destinationBuffer, source_pointer, numberElements * elementSize);
@@ -17,7 +16,6 @@ void botSpeak_serialize(void* sourceBuffer, uint8_t numberElements, uint8_t elem
 void botSpeak_deserialize(void* destinationBuffer, uint8_t *numberElements, uint8_t elementSize, uint8_t* sourceBuffer, uint8_t sourceLength) {
 
     uint8_t* destination_pointer = (uint8_t*)destinationBuffer;
-    int index;
 
     // Use memcpy for direct copy since endianness does not change
     memcpy(destination_pointer, sourceBuffer, sourceLength);
