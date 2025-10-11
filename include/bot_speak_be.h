@@ -1,14 +1,14 @@
 /**
- * @file bot_speak.h
- * @brief Function declarations for operations related to BotSpeak frames. This is mean to run on a Little Endian system.
- * @details A frame is the high-level data structure used to encapsulate a message.
+ * @file bot_speak_be.h
+ * @brief Function declarations for operations related to BotSpeak frames, when run on a Big Endian system.
+ * @details A frame is the high-level data structure used to encapsulate a message. This is meant to be a drop-in replacement for `bot_speak.h`.
  */
 
 #include <stdlib.h>
 #include <stdint.h>
 
-#ifndef BOT_SPEAK_H__
-#define BOT_SPEAK_H__
+#ifndef BOT_SPEAK_BE_H__
+#define BOT_SPEAK_BE_H__
 
 #ifdef __cplusplus
 extern "C" {
@@ -79,4 +79,4 @@ int botSpeak_unpackFrame(DataFrame_TypeDef* destinationFrame, uint8_t* sourceBuf
 }
 #endif
 
-#endif // BOT_SPEAK_H__
+#endif // BOT_SPEAK_BE_H__
