@@ -23,3 +23,23 @@ jobs:
 
       - name: Test Big-Endian Frame Operations
         run: ./build/test_frame_ops_be
+  
+  create-release:
+    needs: test
+    if: startsWith(github.ref_name, 'v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: read
+      pull-requests: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create Release
+        id: create_release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ github.ref_name }}
+          prerelease: true
+          generateReleaseNotes: true
