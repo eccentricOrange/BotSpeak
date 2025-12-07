@@ -20,13 +20,13 @@ int main()
     }
 
     uint8_t dataBuffer[256];
-    uint8_t dataLength;
-    uint8_t numberElements;
+    uint32_t dataLength;
+    uint32_t numberElements;
 
-    float readData[UNSERIALIZED_IMU_RAW_SIZE];
+    float readData[UNSERIALIZED_IMU_MAG_RAW_SIZE];
 
     DataFrame_TypeDef frame = {
-        .frameID = REQUEST_IMU_RAW,
+        .frameID = REQUEST_IMU_MAG_RAW,
         .timestamp = 0,
         .dataLength = 0,
         .data = NULL
@@ -40,7 +40,7 @@ int main()
 
         // Wait for a response
         uint8_t responseBuffer[256];
-        std::streamsize bytesToRead = BOT_SPEAK_MIN_PACKET_SIZE + SERIALIZED_IMU_RAW_BYTES;
+        std::streamsize bytesToRead = BOT_SPEAK_MIN_PACKET_SIZE + SERIALIZED_IMU_MAG_RAW_BYTES;
         serialPort.read((char *)responseBuffer, bytesToRead);
 
         // Print raw response data

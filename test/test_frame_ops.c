@@ -17,7 +17,7 @@ static const int TEST_BUFFER_SIZE = 256;
  */
 int testRequestFramePacking(DataFrame_TypeDef* sourceFrame, uint8_t* expectedBytesBuffer) {
     uint8_t actualBytesBuffer[TEST_BUFFER_SIZE];
-    uint8_t actualBufferLength;
+    uint32_t actualBufferLength;
 
     // Attempt to pack
     printf("\n\nTesting request frame packing...\n");
@@ -65,9 +65,9 @@ int testRequestFramePacking(DataFrame_TypeDef* sourceFrame, uint8_t* expectedByt
  * @param expectedBufferLength The expected number of bytes in the byte-array.
  * @return `int` 0 if all tests pass, error code otherwise.
  */
-int testResponseFramePacking(DataFrame_TypeDef* sourceFrame, uint8_t* expectedBytesBuffer, uint8_t expectedBufferLength) {
+int testResponseFramePacking(DataFrame_TypeDef* sourceFrame, uint8_t* expectedBytesBuffer, uint32_t expectedBufferLength) {
     uint8_t actualBytesBuffer[TEST_BUFFER_SIZE];
-    uint8_t actualBufferLength;
+    uint32_t actualBufferLength;
 
     // Attempt to pack
     printf("\n\nTesting response frame packing...\n");
@@ -175,7 +175,7 @@ int testRequestFrameUnpacking(DataFrame_TypeDef* expectedFrame, uint8_t* sourceB
  * @param sourceLength The length (number of bytes) of the source buffer.
  * @return `int` 0 if all tests pass, error code otherwise.
  */
-int testResponseFrameUnpacking(DataFrame_TypeDef* expectedFrame, uint8_t* sourceBuffer, uint8_t sourceLength) {
+int testResponseFrameUnpacking(DataFrame_TypeDef* expectedFrame, uint8_t* sourceBuffer, uint32_t sourceLength) {
     int status;
     DataFrame_TypeDef actualFrame;
 
@@ -253,7 +253,7 @@ int testMotorCurrentRequestFramePacking() {
     uint8_t expectedRequestBuffer[] = {
         START_BYTE,             // SOF
         0x78, 0x56, 0x34, 0x12, // Timestamp
-        0,                      // Data length
+        0x00, 0x00, 0x00, 0x00, // Data length
         0x27, 0x00, 0x00, 0x00, // Frame ID
         END_BYTE                // EOF
     };
@@ -273,7 +273,7 @@ int motorCurrentResponseFramePacking() {
     // Serialize the input current values into a byte-array.
     uint32_t currentValues[UNSERIALIZED_MOTOR_CURRENT_SIZE] = {0x3931, 0x32BD, 0x31AB, 0x72392313};
     uint8_t serialisedResponseData[SERIALIZED_MOTOR_CURRENT_BYTES];
-    uint8_t serialisedResponseLength;
+    uint32_t serialisedResponseLength;
     botSpeak_serialize(currentValues, UNSERIALIZED_MOTOR_CURRENT_SIZE, sizeof(uint32_t), serialisedResponseData, &serialisedResponseLength);
 
     /// @brief Response frame with the serialized data.
@@ -288,7 +288,7 @@ int motorCurrentResponseFramePacking() {
     uint8_t expectedResponseBuffer[] = {
         START_BYTE,             // SOF
         0x21, 0x43, 0x65, 0x87, // Timestamp
-        16,                     // Data length
+        16,   0x00, 0x00, 0x00, // Data length
         0x47, 0x00, 0x00, 0x00, // Frame ID
         0x31, 0x39, 0x00, 0x00, // Data[0]
         0xBD, 0x32, 0x00, 0x00, // Data[1]
@@ -322,7 +322,7 @@ int testMotorCurrentRequestFrameUnpacking() {
     uint8_t requestBuffer[] = {
         START_BYTE,             // SOF
         0x78, 0x56, 0x34, 0x12, // Timestamp
-        0,                      // Data length
+        0x00, 0x00, 0x00, 0x00, // Data length
         0x27, 0x00, 0x00, 0x00, // Frame ID
         END_BYTE                // EOF
     };
@@ -357,7 +357,7 @@ int testMotorCurrentResponseFrameUnpacking() {
     uint8_t responseBuffer[] = {
         START_BYTE,             // SOF
         0x21, 0x43, 0x65, 0x87, // Timestamp
-        16,                     // Data length
+        16,   0x00, 0x00, 0x00, // Data length
         0x47, 0x00, 0x00, 0x00, // Frame ID
         0x31, 0x39, 0x00, 0x00, // Data[0]
         0xBD, 0x32, 0x00, 0x00, // Data[1]
@@ -387,7 +387,7 @@ int testMotorCurrentResponseFrameUnpacking() {
     // Attempt to deserialize the data field
     printf("\n\nTesting response frame deserialization...\n");
     uint8_t deserializedData[SERIALIZED_MOTOR_CURRENT_BYTES];
-    uint8_t deserializedLength;
+    uint32_t deserializedLength;
     botSpeak_deserialize(deserializedData, &deserializedLength, sizeof(uint32_t), actualResponseFrame.data, actualResponseFrame.dataLength);
 
     // Check the deserialized data length
