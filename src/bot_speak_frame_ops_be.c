@@ -85,15 +85,9 @@ int botSpeak_unpackFrame(DataFrame_TypeDef* destinationFrame, uint8_t* sourceBuf
     // Extract frame ID
     destinationFrame->frameID = (sourceBuffer[6] << 24) | (sourceBuffer[7] << 16) | (sourceBuffer[8] << 8) | (sourceBuffer[9]);
 
-    // Allocate memory for data if data length is greater than zero
+    // Extract data
     if (destinationFrame->dataLength > 0) {
-        destinationFrame->data = (uint8_t*)malloc(destinationFrame->dataLength);
-        if (!destinationFrame->data) {
-            return -ENOMEM; // Memory allocation failed
-        }
         memcpy(destinationFrame->data, &sourceBuffer[10], destinationFrame->dataLength);
-    } else {
-        destinationFrame->data = NULL;
     }
 
     return 0;
