@@ -5,7 +5,6 @@
 void botSpeak_serialize(void* sourceBuffer, uint32_t numberElements, uint8_t elementSize, uint8_t* destinationBuffer, uint32_t* destinationLength) {
 
     uint8_t* source_pointer = (uint8_t*)sourceBuffer;
-    int index;
 
     // Use memcpy for direct copy since endianness does not change
     memcpy(destinationBuffer, source_pointer, numberElements * elementSize);
@@ -17,7 +16,6 @@ void botSpeak_serialize(void* sourceBuffer, uint32_t numberElements, uint8_t ele
 void botSpeak_deserialize(void* destinationBuffer, uint32_t *numberElements, uint8_t elementSize, uint8_t* sourceBuffer, uint32_t sourceLength) {
 
     uint8_t* destination_pointer = (uint8_t*)destinationBuffer;
-    int index;
 
     // Use memcpy for direct copy since endianness does not change
     memcpy(destination_pointer, sourceBuffer, sourceLength);
@@ -69,15 +67,9 @@ int botSpeak_unpackFrame(DataFrame_TypeDef* destinationFrame, uint8_t* sourceBuf
     // Extract frame ID
     memcpy(&destinationFrame->frameID, &sourceBuffer[9], sizeof(destinationFrame->frameID));
     
-    // Allocate memory for data if data length is greater than zero
+    // Extract data
     if (destinationFrame->dataLength > 0) {
-        destinationFrame->data = (uint8_t*)malloc(destinationFrame->dataLength);
-        if (!destinationFrame->data) {
-            return -ENOMEM; // Memory allocation failed
-        }
         memcpy(destinationFrame->data, &sourceBuffer[13], destinationFrame->dataLength);
-    } else {
-        destinationFrame->data = NULL;
     }
 
     return 0;
