@@ -2,7 +2,7 @@
 #include <errno.h>
 #include "bot_speak.h"
 
-void botSpeak_serialize(void* sourceBuffer, uint8_t numberElements, uint8_t elementSize, uint8_t* destinationBuffer, uint8_t* destinationLength) {
+void botSpeak_serialize(void* sourceBuffer, uint32_t numberElements, uint8_t elementSize, uint8_t* destinationBuffer, uint32_t* destinationLength) {
 
     uint8_t* source_pointer = (uint8_t*)sourceBuffer;
 
@@ -13,7 +13,7 @@ void botSpeak_serialize(void* sourceBuffer, uint8_t numberElements, uint8_t elem
     *destinationLength = numberElements * elementSize;
 }
 
-void botSpeak_deserialize(void* destinationBuffer, uint8_t *numberElements, uint8_t elementSize, uint8_t* sourceBuffer, uint8_t sourceLength) {
+void botSpeak_deserialize(void* destinationBuffer, uint32_t *numberElements, uint8_t elementSize, uint8_t* sourceBuffer, uint32_t sourceLength) {
 
     uint8_t* destination_pointer = (uint8_t*)destinationBuffer;
 
@@ -24,22 +24,22 @@ void botSpeak_deserialize(void* destinationBuffer, uint8_t *numberElements, uint
     *numberElements = sourceLength / elementSize;
 }
 
-int botSpeak_packFrame(DataFrame_TypeDef* sourceFrame, uint8_t* destinationBuffer, uint8_t* destinationLength) {
+int botSpeak_packFrame(DataFrame_TypeDef* sourceFrame, uint8_t* destinationBuffer, uint32_t* destinationLength) {
 
     destinationBuffer[0] = START_BYTE; // Start byte
 
     // Timestamp: 4 bytes
     memcpy(&destinationBuffer[1], &sourceFrame->timestamp, sizeof(sourceFrame->timestamp));
     
-    // Data length: 1 byte
-    destinationBuffer[5] = sourceFrame->dataLength;
+    // Data length: 4 bytes
+    memcpy(&destinationBuffer[5], &sourceFrame->dataLength, sizeof(sourceFrame->dataLength));
 
     // Packet ID: 4 bytes
-    memcpy(&destinationBuffer[6], &sourceFrame->frameID, sizeof(sourceFrame->frameID));
+    memcpy(&destinationBuffer[9], &sourceFrame->frameID, sizeof(sourceFrame->frameID));
 
     // Data: variable length
     if (sourceFrame->dataLength > 0 && sourceFrame->data != NULL) {
-        memcpy(&destinationBuffer[10], sourceFrame->data, sourceFrame->dataLength);
+        memcpy(&destinationBuffer[13], sourceFrame->data, sourceFrame->dataLength);
     }
 
     // Calculate the total length
@@ -52,7 +52,7 @@ int botSpeak_packFrame(DataFrame_TypeDef* sourceFrame, uint8_t* destinationBuffe
 }
 
 
-int botSpeak_unpackFrame(DataFrame_TypeDef* destinationFrame, uint8_t* sourceBuffer, uint8_t sourceLength) {
+int botSpeak_unpackFrame(DataFrame_TypeDef* destinationFrame, uint8_t* sourceBuffer, uint32_t sourceLength) {
 
     if (sourceLength < BOT_SPEAK_MIN_PACKET_SIZE || sourceBuffer[0] != START_BYTE || sourceBuffer[sourceLength - 1] != END_BYTE) {
         return -EINVAL; // Invalid frame
@@ -65,11 +65,11 @@ int botSpeak_unpackFrame(DataFrame_TypeDef* destinationFrame, uint8_t* sourceBuf
     memcpy(&destinationFrame->dataLength, &sourceBuffer[5], sizeof(destinationFrame->dataLength));
 
     // Extract frame ID
-    memcpy(&destinationFrame->frameID, &sourceBuffer[6], sizeof(destinationFrame->frameID));
-
+    memcpy(&destinationFrame->frameID, &sourceBuffer[9], sizeof(destinationFrame->frameID));
+    
     // Extract data
     if (destinationFrame->dataLength > 0) {
-        memcpy(destinationFrame->data, &sourceBuffer[10], destinationFrame->dataLength);
+        memcpy(destinationFrame->data, &sourceBuffer[13], destinationFrame->dataLength);
     }
 
     return 0;

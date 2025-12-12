@@ -21,14 +21,14 @@ extern "C" {
 #define END_BYTE (uint8_t)0xBB
 
 /// @brief Minimum size of a BotSpeak packet
-/// @details 11 = 1 (start byte) + 4 (timestamp) + 1 (data length) + 4 (packet ID) + 1 (end byte)
-#define BOT_SPEAK_MIN_PACKET_SIZE (1 + 4 + 1 + 4 + 1)
+/// @details 11 = 1 (start byte) + 4 (timestamp) + 4 (data length) + 4 (packet ID) + 1 (end byte)
+#define BOT_SPEAK_MIN_PACKET_SIZE (1 + 4 + 4 + 4 + 1)
 
 /// @brief Structure to hold BotSpeak frame data. `data` should be a pointer to a byte-array. `dataLength` is number of bytes in the byte-array `data`.
 typedef struct {
     uint32_t frameID;
     uint32_t timestamp;
-    uint8_t dataLength;
+    uint32_t dataLength;
     uint8_t* data;
 } DataFrame_TypeDef;
 
@@ -41,7 +41,7 @@ typedef struct {
  * @param destinationBuffer Pointer to the destination buffer (byte array).
  * @param destinationLength Pointer to store the number of bytes in the destination buffer.
  */
-void botSpeak_serialize(void* sourceBuffer, uint8_t numberElements, uint8_t elementSize, uint8_t* destinationBuffer, uint8_t* destinationLength);
+void botSpeak_serialize(void* sourceBuffer, uint32_t numberElements, uint8_t elementSize, uint8_t* destinationBuffer, uint32_t* destinationLength);
 
 /**
  * @brief Converts a byte array into a value (or array) of a meaningful data-type.
@@ -52,7 +52,7 @@ void botSpeak_serialize(void* sourceBuffer, uint8_t numberElements, uint8_t elem
  * @param sourceBuffer Pointer to the source byte array.
  * @param sourceLength Number of bytes in the source byte array.
  */
-void botSpeak_deserialize(void* destinationBuffer, uint8_t *numberElements, uint8_t elementSize, uint8_t* sourceBuffer, uint8_t sourceLength);
+void botSpeak_deserialize(void* destinationBuffer, uint32_t *numberElements, uint8_t elementSize, uint8_t* sourceBuffer, uint32_t sourceLength);
 
 /**
  * @brief Packs a DataFrame_TypeDef structure into a byte array.
@@ -62,7 +62,7 @@ void botSpeak_deserialize(void* destinationBuffer, uint8_t *numberElements, uint
  * @param destinationLength Pointer to store the number of bytes in the packed data.
  * @return `int` Returns 0 on success, or an error code on failure.
  */
-int botSpeak_packFrame(DataFrame_TypeDef* sourceFrame, uint8_t* destinationBuffer, uint8_t* destinationLength);
+int botSpeak_packFrame(DataFrame_TypeDef* sourceFrame, uint8_t* destinationBuffer, uint32_t* destinationLength);
 
 /**
  * @brief Unpacks a byte array into a DataFrame_TypeDef structure.
@@ -72,7 +72,7 @@ int botSpeak_packFrame(DataFrame_TypeDef* sourceFrame, uint8_t* destinationBuffe
  * @param sourceLength Number of bytes in the source byte array.
  * @return `int` Returns 0 on success, or an error code on failure.
  */
-int botSpeak_unpackFrame(DataFrame_TypeDef* destinationFrame, uint8_t* sourceBuffer, uint8_t sourceLength);
+int botSpeak_unpackFrame(DataFrame_TypeDef* destinationFrame, uint8_t* sourceBuffer, uint32_t sourceLength);
 
 
 #ifdef __cplusplus
