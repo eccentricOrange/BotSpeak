@@ -39,11 +39,11 @@ Include the Integrated Brain conventions header along with BotSpeak headers.
 | 0x09 | config | motor current meas rate | 1 uint_32 | Hz |
 | 0x0A | config | motor controller mode | 1 uint_8 | - |
 | 0x0B | config | motor controller rate | 1 uint_32 | Hz |
-| 0x0C | config | motor PID KP values | 1 float_32 | - |
-| 0x0D | config | motor PID KI values | 1 float_32 | - |
-| 0x0E | config | motor PID KD values | 1 float_32 | - |
-| 0x0F | config | motor PID filter coefficients | 1 float_32 | - |
-| 0x10 | config | motor feedforward params | 2 float_32 | - |
+| 0x0C | config | motor PID KP values | 4 float_32 | - |
+| 0x0D | config | motor PID KI values | 4 float_32 | - |
+| 0x0E | config | motor PID KD values | 4 float_32 | - |
+| 0x0F | config | motor PID filter coefficients | 4 float_32 | - |
+| 0x10 | config | motor feedforward params | 8 float_32 | - |
 | 0x11 | config | motor reverse directions | 4 bool | - |
 | 0x12 | config | battery voltage meas on/off | 1 bool | - |
 | 0x13 | config | battery voltage meas rate | 1 uint_32 | Hz |
